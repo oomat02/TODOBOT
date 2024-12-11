@@ -2,7 +2,7 @@ from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
 
 from app.states import CreateTodoState
-from app.keyboards import main_kb
+from app.keyboards import main_kb, tasks_kb
 from app.users import add_todo
 
 router = Router()
@@ -27,4 +27,9 @@ async def set_todo_due_date(message: types.Message, state: FSMContext):
     reply_markup=main_kb)
     await state.clear()
 
-#TODO: написать функцию для чтения списка задач юзера - Список задач - Список из Inline Кнопок где будут айди задачи
+
+
+@router.message(F.text == 'Список задач')
+async def list_todo(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    await message.answer('Вот ваши Todo!',reply_markup=tasks_kb(user_id))

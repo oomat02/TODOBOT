@@ -23,3 +23,8 @@ def add_todo(user_id, description, due_date):
     data[str(user_id)] = user_tasks
     save_todo(data)
     
+def list_of_todo(user_id):
+    data = load_todo()
+    user_tasks = data.get(str(user_id), [])
+    todo_ids = [todo['id'] for todo in user_tasks]
+    return todo_ids
