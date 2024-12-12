@@ -2,8 +2,8 @@ from aiogram import F, Router, types
 from aiogram.fsm.context import FSMContext
 
 from app.states import CreateTodoState
-from app.keyboards import main_kb, tasks_kb
-from app.users import add_todo
+from app.keyboards import main_kb, tasks_kb, get_delete_kb
+from app.users import add_todo, delete_todo_from_db, get_task_detail
 
 router = Router()
 
@@ -33,3 +33,19 @@ async def set_todo_due_date(message: types.Message, state: FSMContext):
 async def list_todo(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
     await message.answer('Вот ваши Todo!',reply_markup=tasks_kb(user_id))
+
+@router.callback_query(F.data.startswith('task_'))
+async def delete_todo(callback: types.CallbackQuery, state: FSMContext):
+    task_id = callback.data[5:]
+    task = get_task_detail(callback.from_user.id, task_id)
+    text = f'Ваша задача: \n' \
+            f'ID: {task['id']}' \
+            f'Описание: {task['description']}' \
+            f'Дедлайн: {task['due_date']}'
+    await callback.message.answer(text=text, reply_markup=get_delete_kb(callback.message.from_user.id, task_id))
+
+@router.callback_query(F.data.startswith('rm_'))
+async def delete_todo(callback: types.CallbackQuery, state: FSMContext):
+    task_id = callback.data[5:]
+    delete_todo_from_db(callback.from_user.id, task_id)
+    await callback.message.answer('Ваша тудушка успешно удалена!')
