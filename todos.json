@@ -24,6 +24,12 @@
             "id": 5,
             "description": "Moloko kupiut",
             "due_date": "123123123"
+        },
+        {
+            "id": 6,
+            "description": "bdsfj",
+            "due_date": null,
+            "image": null
         }
     ],
     "1309792443": [

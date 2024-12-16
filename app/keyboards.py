@@ -19,5 +19,10 @@ def tasks_kb(user_id):
         keyboard.add(InlineKeyboardButton(text=str(task_desk), callback_data=f'task_{task_id}'))
     return keyboard.adjust(2).as_markup()
 
-def get_delete_kb(user_id, task_id):
-    return InlineKeyboardBuilder().add(InlineKeyboardButton(text='Удалить задачу', callback_data=f'rm_{user_id}_{task_id}')).adjust(2).as_markup()
+def get_task_kb(task_id):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text='Обновить задачу', callback_data=f'update_{task_id}')],
+            [InlineKeyboardButton(text='Удалить задачу', callback_data=f'rm_{task_id}')]
+        ]
+    )
